@@ -1,31 +1,30 @@
 console.log("are a winnin son");
 
+getStuff("/data/2791_2019dar.csv", (data) => {
+  let lines = data.split("\n");
+  var ctx = document.getElementById("myChart").getContext("2d");
+  var content = lines.slice(1);
+  console.log(content);
+  var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: "bar",
 
+    // The data for our dataset
+    data: {
+      labels: lines[0].split(",").slice(2),
+      datasets: [
+        {
+          label: "winnin",
+          backgroundColor: "rgb(255, 99, 132)",
+          borderColor: "rgb(255, 99, 132)",
+          data: content[0].split(",").slice(2)
+        }
+      ]
+    },
 
-var ctx = document.getElementById("myChart").getContext("2d");
-var chart = new Chart(ctx, {
-  // The type of chart we want to create
-  type: "bar",
-
-  // The data for our dataset
-  data: {
-    labels: ["Swag Wins"],
-    datasets: [
-      {
-        label: "Fortnite Dub Percentage",
-        backgroundColor: "rgb(255, 99, 132)",
-        borderColor: "rgb(255, 99, 132)",
-        data: [732]
-      }
-    ]
-  },
-
-  // Configuration options go here
-  options: {}
-});
-
-getStuff("/data/2791_2019dar.csv", (e) => {
-  console.log(e);
+    // Configuration options go here
+    options: {}
+  });
 });
 
 
