@@ -2,9 +2,9 @@
 
 class CompetitionData {
     
-    constructor(year, headings) {
+    constructor(year, headers) {
         this.year = year;
-        this.headings = headings;
+        this.headers = headers;
         this.teamData = {};
     }
     
