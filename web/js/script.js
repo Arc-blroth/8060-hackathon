@@ -1,6 +1,6 @@
 console.log("are a winnin son");
 
-getStuff("/data/2791_2019dar.csv", (data) => {
+getFile("/data/2791_2019dar.csv", (data) => {
   let lines = data.split("\n");
   var ctx = document.getElementById("myChart").getContext("2d");
   var content = lines.slice(1);
@@ -26,14 +26,3 @@ getStuff("/data/2791_2019dar.csv", (data) => {
     options: {}
   });
 });
-
-
-function getStuff(url, callback) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            callback(xmlHttp.responseText);
-    }
-    xmlHttp.open("GET", url, true); // true for asynchronous 
-    xmlHttp.send(null);
-}
