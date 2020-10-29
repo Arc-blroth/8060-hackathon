@@ -28,6 +28,17 @@ function init() {
         getAndParseCsv("3538_2020misou", 2020),
     ]).then(() => {
         console.log(allData);
-        initPathing();
+        
+        let teamSelect = document.getElementById("team");
+        let teams = Object.keys(allData["2791_2019dar"].teamData);
+        for(let i = 0; i < teams.length; i++) {
+          teamSelect.options[i + 1] = new Option(teams[i], teams[i]);
+        }
+        
+        teamSelect.onselect = (e) => {
+          console.log(e);
+        };
+      
+        
     });
 }

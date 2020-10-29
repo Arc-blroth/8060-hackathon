@@ -8,6 +8,7 @@
     <meta name="description" content="A tiny site that aggregates and displays FRC scouting data from past years. Made for Beach Blitz 2020.">
 
     <title>Command B's Scouting Helper 9000</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="/style.css">
 
     <script src="/js/load.js" defer></script>
@@ -16,7 +17,8 @@
     <header>
       <h1>Gaming Statistics</h1>
     </header>
-    <canvas id="myChart"></canvas>
-    <canvas id="autoPathing"></canvas>
+    <select name="team" id="team" class="team">
+      <option>Select Team</option>
+    </select>
   </body>
 </html>
