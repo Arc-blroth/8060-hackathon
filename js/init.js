@@ -188,14 +188,14 @@ function buildChartData(teamData) {
     out.push(countNums(teamData, "Cargo Scored: Auto", {
       4: "Ship Side"
     }));
-    out.push(countNums(teamData, "Auto Cargo Rocket Level", {
-      5: "Level"
+    out.push(countNums(teamData, "Auto Rocket Levels", {
+      5: "Cargo Rocket Level"
+      6: "Hatch Rocket Level"
+      7: "Hath Rocket Level 2"
     }));
-    out.push(countNums(teamData, "Auto Hatch Rocket Level", {
-      6: "Level "
-    }));
-    out.push(countNums(teamData, "Auto Number of Cargo Dropped", {
+    out.push(countNums(teamData, "Auto Number Dropped", {
       6: "Level"
+      
     }));
     out.push(countNums(teamData, "Auto Number of Hatches Dropped", {
       6: "Level"
@@ -205,12 +205,17 @@ function buildChartData(teamData) {
     }));
     out.push(countNums(teamData, "Teleop Rocket Hatch ", {
       12: "Left 1",
-      13:
-      14:
+      13: "Left 2"
+      14: "Left 3"
+    }));
+    out.push(countNums(teamData, "Teleop Rocket Cargo ", {
+      15: "Left 1",
+      16: "Left 2"
+      17: "Left 3"
     }));
   } else if(dataset == datasets[1]) {
     // 2015
-    out.push(countEnum(teamData, "Autozone Totes", 0, {
+    out.push(countNums(teamData, "Autozone Totes", 0, {
       0: "No Totes moved into Autozone during Autonomous period",
       1: "One Totes moved into Autozone during Autonomous period",
       2: "Two Totes moved into Autozone during Autonomous period",
@@ -218,14 +223,10 @@ function buildChartData(teamData) {
     }))
     out.push(countEnum(teamData, "Moved Into Auto Zone", 1, yesNo))
     out.push(countEnum(teamData, "Bins Retrieved from Step", 2, {
-      0: "No bins retrieved from step zone",
-      1: "One bins retrieved from step zone",
-      2: "Two bins retrieved from step zone",
+      
     }))
-    out.push(countEnum(teamData, "Stacks", 2, {
-      0: "No bins retrieved from step zone",
-      1: "One bins retrieved from step zone",
-      2: "Two bins retrieved from step zone",
+    out.push(countNums(teamData, "Stacks", {
+      2: "Number of Stacks"
     }))
   } else if(dataset == datasets[2]) {
     // 2018cc
@@ -250,7 +251,7 @@ function buildChartData(teamData) {
     out.push(countEnum(teamData, "Played Defense?", 11, yesNo));
   } else if(dataset == datasets[3]) {
     // 2018roe
-    out.push(countEnum(teamData, "Habitat Line", 1, yesNo));
+    out.push(countEnum(teamData, "Crossed line autonomously?", 1, yesNo));
     out.push(countNums(teamData, "Cubes Moved Autonomously",  {
       2: "Num of Own Cubes on Switch",
       3: "Num of Own Cubes on Scale",
@@ -264,8 +265,13 @@ function buildChartData(teamData) {
       7: "Cubes Exchanged"
     }));
     out.push(countEnum(teamData, "Did they play Defense?", 11, yesNo));
-    out.push(countNums(teamData, "Num of bots climbed", ))
+    out.push(countNums(teamData, "Num of bots climbed", {
+      8: "Own Bot Climbed",
+      9: "Own Bot w/ 1 other climbed",
+      10: "Own bot w/ 2 others climbed"
+    }));
   } else if(dataset == datasets[4]) {
+    
     // 2020
     
     //column 1

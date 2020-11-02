@@ -14,6 +14,7 @@
             scriptTag.onerror = () => {
                 reject(scriptSrc);
             };
+            if(module) scriptTag.type = "module";
             scriptTag.src = scriptSrc;
             document.body.append(scriptTag);
         });
