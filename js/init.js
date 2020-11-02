@@ -139,7 +139,6 @@ function updateGraphs() {
   chartData.forEach(c => {
     let ele = c.buildElement();
     previousCharts.push(ele);
-    document.body.append(ele);
   });
 }
 
@@ -183,6 +182,7 @@ class ChartData {
         }
       }
     });
+    document.body.append(ele);
     return ele;
   }
 }
@@ -194,14 +194,16 @@ class PathingData {
   }
 
   buildElement() {
-    this.canvas = scrawl.document.addStack({ host: document.body });
+    this.ele = buildElement("div");
+    document.body.append(this.ele);
+    this.canvas = scrawl.addStack({ host: this.ele });
     this.canvas.set({
       backgroundColor: "blanchedalmond",
       css: {
         border: "1px solid black"
       }
     });
-    return this.canvas;
+    return this.ele;
   }
 }
 
@@ -298,10 +300,9 @@ function buildChartData(teamData) {
     );
     out.push(
       countNums(teamData, "Dead", {
-        25: "Amount of Defense Played"
+        25: "Amount of Time Spent Dead in Match"
       })
     );
-    out.push(countEnum(teamData, "Who Played Defense?", 23, yesNo));
     out.push(countEnum(teamData, "Did they have any Fouls?", 24, yesNo));
     out.push(countEnum(teamData, "Was the team assisted?", 28, yesNo));
   } else if (dataset == datasets[1]) {
