@@ -25,16 +25,15 @@
         if(scriptsLoaded < scripts.length) {
             loadScript(scripts[scriptsLoaded++]).then(afterScriptLoaded);
         } else {
-            init();
+            window.init();
         }
     }
     afterScriptLoaded();
 })([
     "https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js",
     "https://code.createjs.com/1.0.0/createjs.min.js",
-    { src: "https://unpkg.com/scrawl-canvas@8.2.5", module: true },
     "/js/util.js",
     "/js/models.js",
-    "/js/init.js",
+    { src: "/js/init.js", module: true },
     "/js/pathing.js"
 ]);
