@@ -180,10 +180,10 @@ function updateGraphs() {
       if(chartData[0][i] instanceof ChartData) {
         let ele = chartData[0][i].buildElement(otherChartData.map(c => c[i]));
         previousCharts.push(ele);
-      } else if(teamData.length = 1) {
+      } /* else if(teamData.length = 1) {
         let ele = chartData[0][i].buildElement();
         previousCharts.push(ele);
-      }
+      } */
     }
   }
 }
