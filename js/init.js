@@ -4,18 +4,18 @@ import scrawl from "https://unpkg.com/scrawl-canvas@8.2.5";
 
 let allData = [];
 const datasets = [
-  "2791_2019dar",
   "3476_2015cc",
   "3476_2018cc",
   "3476_2018roe",
+  "2791_2019dar",
   "3538_2020misou"
 ];
 
 const datasetStyles = [
-  { name: "Destination: Deep Space (2019)", color: "#121014" },
   { name: "Recycle Rush (2015)", color: "#00a94f" },
   { name: "Power Up (2018)", color: "#f7c628" },
   { name: "Power Up (2018)", color: "#f7c628" },
+  { name: "Destination: Deep Space (2019)", color: "#121014" },
   { name: "Infinite Recharge (2020)", color: "#0066b3" },
 ];
 
@@ -54,7 +54,7 @@ function parseCsv(name, year, csv) {
   });
   let headers = lines[0].slice(2);
   let data = new CompetitionData(year, headers);
-  if (name == datasets[0]) {
+  if (name == datasets[3]) {
     // sneak 100
     lines.slice(1).forEach(row => {
       data.addMatch(row[0], row.slice(2));
@@ -76,10 +76,10 @@ function getAndParseCsv(name, year) {
 // Called from load.js
 window.init = function() {
   Promise.all([
-    getAndParseCsv(datasets[0], 2019),
-    getAndParseCsv(datasets[1], 2015),
+    getAndParseCsv(datasets[0], 2015),
+    getAndParseCsv(datasets[1], 2018),
     getAndParseCsv(datasets[2], 2018),
-    getAndParseCsv(datasets[3], 2018),
+    getAndParseCsv(datasets[3], 2019),
     getAndParseCsv(datasets[4], 2020)
   ]).then(() => {
     let loadingEle = document.getElementById("loading");
@@ -88,7 +88,7 @@ window.init = function() {
 
     let datasetSelect = document.getElementById("dataset");
     for (let i = 0; i < datasets.length; i++) {
-      datasetSelect.options[i] = new Option(datasets[i], datasets[i]);
+      datasetSelect.options[i + 1] = new Option(datasets[i], datasets[i]);
     }
 
     let teamSelect = document.getElementById("team1");
@@ -102,6 +102,7 @@ window.init = function() {
 
       for (let i = 0; i < teams.length; i++) {
         let option1 = new Option(teams[i], teams[i]);
+        console.log(teams[i]);
         teamSelect.options[i] = option1;
       }
     };
@@ -113,19 +114,19 @@ window.init = function() {
         );
       } else if (dataset == "3476_2015cc") {
         setBackgroundImage(
-          "https://www.google.com/url?sa=i&url=https%3A%2F%2Fteam5484.com%2Fourseasons%2F2015-recycle-rush%2F&psig=AOvVaw3D0mVcuQFx-g65wg0lr74P&ust=1604466154459000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCJDklrXM5ewCFQAAAAAdAAAAABAI"
+          "https://www.badgerbots.org/wp-content/uploads/2015/03/recycle-rush-logo.png"
         );
       } else if (dataset == "3476_2018cc") {
         setBackgroundImage(
-          "https://www.firstinspires.org/sites/default/files/uploads/frc/Blog/2019-frc-game-logo-small.jpg"
+          "https://firstfrc.blob.core.windows.net/frc2018/Manual/HTML/2018FRCGameSeasonManual_files/image002.jpg"
         );
       } else if (dataset == "3476_2018roe") {
         setBackgroundImage(
-          "https://www.firstinspires.org/sites/default/files/uploads/frc/Blog/2019-frc-game-logo-small.jpg"
+          "https://firstfrc.blob.core.windows.net/frc2018/Manual/HTML/2018FRCGameSeasonManual_files/image002.jpg"
         );
       } else {
         setBackgroundImage(
-          "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.reddit.com%2Fr%2FFRC%2Fcomments%2Fgj70nw%2Finfinite_recharge_2_electric_boogaloo%2F&psig=AOvVaw23m3MMaa6jufWOt6utOvwD&ust=1604466334043000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCPDH-JHN5ewCFQAAAAAdAAAAABAO"
+          "https://www.firstinspires.org/sites/default/files/uploads/rightimage/infinite-recharge-web-promo_0.png"
         );
       }
     };
@@ -137,7 +138,7 @@ window.init = function() {
     }
 
     datasetSelect.onchange = function() {
-      if (this.selectedIndex) {
+      if(this.selectedIndex) {
         dataset = this.value;
         datasetNumber = this.selectedIndex - 1;
         updateOtherOptions();
@@ -181,7 +182,7 @@ function updateGraphs() {
         previousCharts.push(ele);
       } else if(teamData.length = 1) {
         let ele = chartData[0][i].buildElement();
-        previsouCharts.push(ele);
+        previousCharts.push(ele);
       }
     }
   }
