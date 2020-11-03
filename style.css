@@ -1,18 +1,81 @@
-/* this file is loaded by index.html and styles the page */
+@import url('https://fonts.googleapis.com/css2?family=Squada+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans&display=swap');
+
 
 * {
   box-sizing: border-box;
 }
 
 body {
-  font-family: sans-serif;
-  margin: 2em 1em;
-  line-height: 1.5em;
-  
+  font-family: 'PT Sans', cursive;
+  background-color: #d2c492;
 }
 
 h1 {
-  color: #373fff;
+  color: #8910de;
   line-height: 1.1;
+  font-family: "Squada One";
+  font-size: 4em;
+  text-align: center;
 }
 
+header {
+  padding: 2em 1em;
+}
+
+div.controls {
+  position: relative;
+  display: block;
+  background-color: #efefef;
+  padding: 2em 10vw;
+  min-height: calc(4em + 300px);
+  font-size: 1.2em;
+}
+
+label {
+  margin-bottom: 0px;
+}
+
+select {
+  display: block;
+  margin-bottom: 10px;
+  font-family: 'PT Sans', cursive;
+}
+
+div.controls-inner {
+  float: left;
+}
+
+aside.yearLogoContainer {
+  float: right;
+  width: 300px;
+  height: 300px;
+}
+
+img.yearLogo {
+  border: 1px solid black;
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+}
+
+div.charts {
+  display: grid;
+  grid-template-columns: 45% 45%;
+  grid-row-gap: 20px;
+  grid-column-gap: 10%;
+  padding: 40px 2.5% 20px 2.5%;
+}
+
+div.chart {
+  background-color: #efefef;
+  border: 4px solid #efefef;
+  border-radius: 4px;
+}
+
+canvas.pathing {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border: 1px solid black;
+}

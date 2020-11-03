@@ -34,6 +34,5 @@
     "https://code.createjs.com/1.0.0/createjs.min.js",
     "/js/util.js",
     "/js/models.js",
-    { src: "/js/init.js", module: true },
-    "/js/pathing.js"
+    { src: "/js/init.js", module: true }
 ]);

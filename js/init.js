@@ -11,15 +11,47 @@ const datasets = [
   "3538_2020misou"
 ];
 
+const datasetStyles = [
+  { name: "Destination: Deep Space (2019)", color: "#121014" },
+  { name: "Recycle Rush (2015)", color: "#00a94f" },
+  { name: "Power Up (2018)", color: "#f7c628" },
+  { name: "Power Up (2018)", color: "#f7c628" },
+  { name: "Infinite Recharge (2020)", color: "#0066b3" },
+];
+
+const charts = document.getElementById("charts");
+
 let lastElement = null;
 let previousCharts = [];
 let dataset = null;
-let teamNumber = 0;
+let datasetNumber = 0;
+let teamNumbers = [];
 let field = 0;
 let canvasIdCounter = 0;
 
 function parseCsv(name, year, csv) {
-  let lines = csv.split("\n").map(s => s.split(","));
+  let lines = csv.split("\n").map(s => {
+    if(!s.includes("\"")) {
+      return s.split(",");
+    } else {
+      let out = [];
+      let current = [];
+      let inString = false;
+      for(let i = 0; i < s.length; i++) {
+        let char = s.charAt(i);
+        if(!inString && char == ",") {
+          out.push(current.join(""));
+          current = [];
+        } else if(char == "\"") {
+          inString = !inString;
+        } else {
+          current.push(char);
+        }
+      }
+      out.push(current.join(""));
+      return out;
+    }
+  });
   let headers = lines[0].slice(2);
   let data = new CompetitionData(year, headers);
   if (name == datasets[0]) {
@@ -50,126 +82,146 @@ window.init = function() {
     getAndParseCsv(datasets[3], 2018),
     getAndParseCsv(datasets[4], 2020)
   ]).then(() => {
-    console.log(allData);
+    let loadingEle = document.getElementById("loading");
+    loadingEle.parentElement.removeChild(loadingEle);
+    document.getElementById("controls-inner").style.display = "block";
 
     let datasetSelect = document.getElementById("dataset");
     for (let i = 0; i < datasets.length; i++) {
-      datasetSelect.options[i + 1] = new Option(datasets[i], datasets[i]);
+      datasetSelect.options[i] = new Option(datasets[i], datasets[i]);
     }
 
-    let teamSelect = document.getElementById("team");
+    let teamSelect = document.getElementById("team1");
 
     let updateOtherOptions = () => {
       let teams = Object.keys(allData[dataset].teamData).filter(t => t != 0);
 
-      for (let i = teamSelect.options.length - 1; i >= 1; i--) {
+      for (let i = teamSelect.options.length - 1; i >= 0; i--) {
         teamSelect.remove(i);
       }
 
       for (let i = 0; i < teams.length; i++) {
-        let option = new Option(teams[i], teams[i]);
-        teamSelect.options[i + 1] = option;
+        let option1 = new Option(teams[i], teams[i]);
+        teamSelect.options[i] = option1;
       }
     };
-
-    let eighteen =
-      "url(https://www.firstinspires.org/sites/default/files/uploads/frc/Blog/2019-frc-game-logo-small.jpg)";
 
     let updateImage = () => {
       if (dataset == "2791_2019dar") {
         setBackgroundImage(
-          "https://www.firstinspires.org/sites/default/files/uploads/frc/Blog/2019-frc-game-logo-small.jpg",
-          0.5
+          "https://www.firstinspires.org/sites/default/files/uploads/frc/Blog/2019-frc-game-logo-small.jpg"
         );
       } else if (dataset == "3476_2015cc") {
         setBackgroundImage(
-          "https://www.firstinspires.org/sites/default/files/uploads/frc/Blog/2019-frc-game-logo-small.jpg",
-          0.5
+          "https://www.google.com/url?sa=i&url=https%3A%2F%2Fteam5484.com%2Fourseasons%2F2015-recycle-rush%2F&psig=AOvVaw3D0mVcuQFx-g65wg0lr74P&ust=1604466154459000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCJDklrXM5ewCFQAAAAAdAAAAABAI"
         );
       } else if (dataset == "3476_2018cc") {
         setBackgroundImage(
-          "https://www.firstinspires.org/sites/default/files/uploads/frc/Blog/2019-frc-game-logo-small.jpg",
-          0.5
+          "https://www.firstinspires.org/sites/default/files/uploads/frc/Blog/2019-frc-game-logo-small.jpg"
         );
       } else if (dataset == "3476_2018roe") {
         setBackgroundImage(
-          "https://www.firstinspires.org/sites/default/files/uploads/frc/Blog/2019-frc-game-logo-small.jpg",
-          0.5
+          "https://www.firstinspires.org/sites/default/files/uploads/frc/Blog/2019-frc-game-logo-small.jpg"
         );
       } else {
         setBackgroundImage(
-          "https://www.firstinspires.org/sites/default/files/uploads/frc/Blog/2019-frc-game-logo-small.jpg",
-          0.5
+          "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.reddit.com%2Fr%2FFRC%2Fcomments%2Fgj70nw%2Finfinite_recharge_2_electric_boogaloo%2F&psig=AOvVaw23m3MMaa6jufWOt6utOvwD&ust=1604466334043000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCPDH-JHN5ewCFQAAAAAdAAAAABAO"
         );
       }
     };
 
-    function setBackgroundImage(imageid, opacity) {
-      var s = document.body.style;
-      //s.backgroundImage = `url(${imageid})`;
+    function setBackgroundImage(imageId) {
+      let logoImg = document.getElementById("yearLogo");
+      logoImg.style.display = "block";
+      logoImg.src = imageId;
     }
 
     datasetSelect.onchange = function() {
       if (this.selectedIndex) {
         dataset = this.value;
+        datasetNumber = this.selectedIndex - 1;
         updateOtherOptions();
         updateImage();
-        if (teamNumber) updateGraphs();
+        clearGraphs();
+        teamNumbers = [];
       }
     };
 
     teamSelect.onchange = function() {
-      if (this.selectedIndex) {
-        teamNumber = this.value;
-        updateGraphs();
+      teamNumbers = [];
+      for (let i = 0; i < teamSelect.options.length; i++) {
+        if(teamSelect.options[i].selected) {
+          teamNumbers.push(teamSelect.options[i].value);
+        }
       }
+      updateGraphs();
     };
+    
   });
 };
 
-function updateGraphs() {
-  let teamData = allData[dataset].teamData[teamNumber];
-  let chartData = buildChartData(teamData);
-
+function clearGraphs() {
   if (previousCharts.length > 0) {
     previousCharts.forEach(e => e.parentElement.removeChild(e));
     previousCharts = [];
   }
+}
 
-  chartData.forEach(c => {
-    let ele = c.buildElement();
-    previousCharts.push(ele);
-  });
+function updateGraphs() {
+  let teamData = teamNumbers.map(n => [n, allData[dataset].teamData[n]]);
+  
+  clearGraphs();
+  
+  if(teamData.length > 0) {
+    let chartData = teamData.map(d => buildChartData(d[0], d[1]));
+    let otherChartData = chartData.slice(1);
+    for(let i = 0; i < chartData[0].length; i++) {
+      if(chartData[0][i] instanceof ChartData) {
+        let ele = chartData[0][i].buildElement(otherChartData.map(c => c[i]));
+        previousCharts.push(ele);
+      } else if(teamData.length = 1) {
+        let ele = chartData[0][i].buildElement();
+        previsouCharts.push(ele);
+      }
+    }
+  }
 }
 
 class ChartData {
-  constructor(title, labels, data) {
+  constructor(title, team, labels, data) {
     this.title = title;
+    this.team = team;
     this.labels = labels;
     this.data = data;
   }
 
-  buildElement() {
-    let ele = buildElement("canvas");
-    let ctx = ele.getContext("2d");
+  buildElement(moreData = []) {
+    let ele = buildElement("div", ["chart"]);
+    let ele2 = buildElement("canvas");
+    let ctx = ele2.getContext("2d");
+    moreData.push(this);
     let chart = new Chart(ctx, {
       type: "bar",
 
       // The data for our dataset
       data: {
         labels: this.labels,
-        datasets: [
-          {
-            label: this.title,
-            backgroundColor: "rgb(255, 99, 132)",
+        datasets: moreData.map(d => {
+          return {
+            label: d.team,
+            backgroundColor: d.team == this.team ? datasetStyles[datasetNumber].color : randomColor(d.team),
             borderColor: "rgb(255, 99, 132)",
-            data: this.data
+            data: d.data
           }
-        ]
+        })
       },
 
       // Configuration options go here
       options: {
+        title: {
+          display: true,
+          text: this.title
+        },
         scales: {
           yAxes: [
             {
@@ -182,7 +234,8 @@ class ChartData {
         }
       }
     });
-    document.body.append(ele);
+    charts.append(ele);
+    ele.append(ele2);
     return ele;
   }
 }
@@ -194,16 +247,15 @@ class PathingData {
   }
 
   buildElement() {
-    this.ele = buildElement("div");
-    document.body.append(this.ele);
-    this.canvas = scrawl.addStack({ host: this.ele });
-    this.canvas.set({
-      backgroundColor: "blanchedalmond",
-      css: {
-        border: "1px solid black"
-      }
+    this.canvas = scrawl.addCanvas({
+      host: charts,
+      classes: 'pathing'
     });
-    return this.ele;
+    this.canvas.base.set({
+      width: 1000,
+      height: 1000
+    });
+    return this.canvas.domElement;
   }
 }
 
@@ -214,12 +266,12 @@ const yesNo = {
   1: "Yes"
 };
 
-function buildChartData(teamData) {
+function buildChartData(teamNumber, teamData) {
   let out = [];
   if (dataset == datasets[0]) {
     // 2019
     out.push(
-      countEnum(teamData, "Starting Position", 0, {
+      countEnum(teamNumber, teamData, "Starting Position", 0, {
         L1: "Left 1",
         L2: "Left 2",
         M: "Middle",
@@ -227,205 +279,205 @@ function buildChartData(teamData) {
         R2: "Right 2"
       })
     );
-    out.push(countEnum(teamData, "Habitat Line", 1, yesNo));
+    out.push(countEnum(teamNumber, teamData, "Habitat Line", 1, yesNo));
     out.push(
-      countNums(teamData, "Hatches Scored: Auto", {
+      countNums(teamNumber, teamData, "Hatches Scored: Auto", {
         2: "Ship Side",
         3: "Ship Front"
       })
     );
     out.push(
-      countNums(teamData, "Cargo Scored: Auto", {
+      countNums(teamNumber, teamData, "Cargo Scored: Auto", {
         4: "Ship Side"
       })
     );
     out.push(
-      countNums(teamData, "Auto Rocket Level when Scored", {
+      countNums(teamNumber, teamData, "Auto Rocket Level when Scored", {
         5: "Cargo Rocket Level",
         6: "Hatch Rocket Level",
         7: "2nd Hatch Rocket Level"
       })
     );
     out.push(
-      countNums(teamData, "Number Dropped in Auto", {
+      countNums(teamNumber, teamData, "Number Dropped in Auto", {
         8: "Number of Cargo Dropped",
         9: "Number of Hatches Dropped"
       })
     );
     out.push(
-      countNums(teamData, "Number of H/C Scored in Cargo Ship in Teleop", {
+      countNums(teamNumber, teamData, "Number of H/C Scored in Cargo Ship in Teleop", {
         10: "Hatches Scored in Teleop",
         11: "Cargo Scored in Teleop"
       })
     );
     out.push(
-      countNums(teamData, "Number of Hatches Scored in the Teleop Rocket", {
+      countNums(teamNumber, teamData, "Number of Hatches Scored in the Teleop Rocket", {
         12: "Level 1",
         13: "Level 2",
         14: "Level 3"
       })
     );
     out.push(
-      countNums(teamData, "Number of cargo scored in the Teleop Rocket", {
+      countNums(teamNumber, teamData, "Number of cargo scored in the Teleop Rocket", {
         15: "Level 1",
         16: "Level 2",
         17: "Level 3"
       })
     );
     out.push(
-      countNums(teamData, "Number of H/C Dropped in Teleop", {
+      countNums(teamNumber, teamData, "Number of H/C Dropped in Teleop", {
         18: "Hatches Dropped",
         19: "Cargo Dropped"
       })
     );
     out.push(
-      countNums(teamData, "Defense", {
+      countNums(teamNumber, teamData, "Defense", {
         20: "Amount of Defense Played",
         21: "Defense Quality",
         22: "Amount of Defense Recieved"
       })
     );
     out.push(
-      countNums(teamData, "Defense", {
+      countNums(teamNumber, teamData, "Defense", {
         20: "Amount of Defense Played",
         21: "Defense Quality",
         22: "Amount of Defense Recieved"
       })
     );
     out.push(
-      countNums(teamData, "Highest level of HAB by team in endgame", {
+      countNums(teamNumber, teamData, "Highest level of HAB by team in endgame", {
         26: "Achieved",
         27: "Attempted"
       })
     );
     out.push(
-      countNums(teamData, "Dead", {
-        25: "Amount of Time Spent Dead in Match"
+      countNums(teamNumber, teamData, "Amount of Time Spent Dead in Match", {
+        25: "Time (seconds)"
       })
     );
-    out.push(countEnum(teamData, "Did they have any Fouls?", 24, yesNo));
-    out.push(countEnum(teamData, "Was the team assisted?", 28, yesNo));
+    out.push(countEnum(teamNumber, teamData, "Did they have any Fouls?", 24, yesNo));
+    out.push(countEnum(teamNumber, teamData, "Was the team assisted?", 28, yesNo));
   } else if (dataset == datasets[1]) {
     // 2015
     out.push(
-      countNums(teamData, "Autozone Totes", 0, {
+      countNums(teamNumber, teamData, "Autozone Totes", 0, {
         0: "Number of totes moved into Autozone during autonomous"
       })
     );
-    out.push(countEnum(teamData, "Moved Into Auto Zone", 1, yesNo));
+    out.push(countEnum(teamNumber, teamData, "Moved Into Auto Zone", 1, yesNo));
     out.push(
-      countNums(teamData, "Bins Retrieved from Step", 2, {
-        2: "Bins retrieved from the step zone"
+      countNums(teamNumber, teamData, "Bins Retrieved from Step", 2, {
+        2: "Bins"
       })
     );
     out.push(
-      countNums(teamData, "Stacks", {
+      countNums(teamNumber, teamData, "Stacks", {
         3: "Number of Stacks"
       })
     );
     out.push(
-      countNums(teamData, "Binned Stacks", {
+      countNums(teamNumber, teamData, "Binned Stacks", {
         4: "Number of Binned Stacks"
       })
     );
     out.push(
-      countNums(teamData, "Noodled Stacks", {
+      countNums(teamNumber, teamData, "Noodled Stacks", {
         5: "Number of Noodled Stacks"
       })
     );
     out.push(
-      countNums(teamData, "Coop Totes Placed", {
-        6: "Coopertition totes placed"
+      countNums(teamNumber, teamData, "Coopertition Totes Placed", {
+        6: "Totes"
       })
     );
-    out.push(countEnum(teamData, "Intake human", 7, yesNo));
-    out.push(countEnum(teamData, "Intake landfill", 8, yesNo));
+    out.push(countEnum(teamNumber, teamData, "Intake Human", 7, yesNo));
+    out.push(countEnum(teamNumber, teamData, "Intake Landfill", 8, yesNo));
     out.push(
-      countNums(teamData, "Number of Capped Stacks", {
-        9: "Number of Capped Stacks 1",
-        10: "Number of Capped Stacks 2",
-        11: "Number of Capped Stacks 3",
-        12: "Number of Capped Stacks 4",
-        13: "Number of Capped Stacks 5",
-        14: "Number of Capped Stacks 6"
+      countNums(teamNumber, teamData, "Number of Capped Stacks", {
+        9:  "1",
+        10: "2",
+        11: "3",
+        12: "4",
+        13: "5",
+        14: "6"
       })
     );
     out.push(
-      countNums(teamData, "Number of Stacks", {
-        15: "Number of Stacks 1",
-        16: "Number of Stacks 2",
-        17: "Number of Stacks 3",
-        18: "Number of Stacks 4",
-        19: "Number of Stacks 5",
-        20: "Number of Stacks 6"
+      countNums(teamNumber, teamData, "Number of Stacks", {
+        15: "1",
+        16: "2",
+        17: "3",
+        18: "4",
+        19: "5",
+        20: "6"
       })
     );
   } else if (dataset == datasets[2]) {
     // 2018cc
-    out.push(countEnum(teamData, "Crossed line autonomously?", 1, yesNo));
+    out.push(countEnum(teamNumber, teamData, "Crossed Line Autonomously?", 1, yesNo));
     out.push(
-      countNums(teamData, "Cubes Moved Autonomously", {
-        2: "Num of Own Cubes on Switch",
-        3: "Num of Own Cubes on Scale"
+      countNums(teamNumber, teamData, "Cubes Moved Autonomously", {
+        2: "Own Cubes on Switch",
+        3: "Own Cubes on Scale"
       })
     );
     out.push(
-      countNums(teamData, "Cubes Moved w/ Teleop", {
-        4: "Num of Own Cubes on Switch",
-        5: "Num of Own Cubes on Scale",
-        6: "Num of Opponent Cubes on Switch"
+      countNums(teamNumber, teamData, "Cubes Moved w/ Teleop", {
+        4: "Own Cubes on Switch",
+        5: "Own Cubes on Scale",
+        6: "Opponent Cubes on Switch"
       })
     );
     out.push(
-      countNums(teamData, "Exchanged Cubes", {
-        7: "Num of Cubes Exchanged"
+      countNums(teamNumber, teamData, "Cubes Exchanged", {
+        7: "Cubes Exchanged"
       })
     );
     out.push(
-      countNums(teamData, "Num of Bots Climbed", {
-        8: "Own Bot Climbed",
-        9: "Own Bot Climbed w/ 1 Teammate",
-        10: "Own Bot Climbed w/ 2 Teammates"
+      countNums(teamNumber, teamData, "Num of Bots Climbed", {
+        8:  "Own Bot",
+        9:  "Own Bot w/ 1 Teammate",
+        10: "Own Bot w/ 2 Teammates"
       })
     );
     out.push(new PathingData("test pathing", []));
-    out.push(countEnum(teamData, "Did they play defense?", 11, yesNo));
+    out.push(countEnum(teamNumber, teamData, "Did They Defend?", 11, yesNo));
   } else if (dataset == datasets[3]) {
     // 2018roe
-    out.push(countEnum(teamData, "Crossed line autonomously?", 1, yesNo));
+    out.push(countEnum(teamNumber, teamData, "Crossed Line Autonomously?", 1, yesNo));
     out.push(
-      countNums(teamData, "Cubes Moved Autonomously", {
-        2: "Num of Own Cubes on Switch",
-        3: "Num of Own Cubes on Scale"
+      countNums(teamNumber, teamData, "Cubes Moved Autonomously", {
+        2: "Own Cubes on Switch",
+        3: "Own Cubes on Scale"
       })
     );
     out.push(
-      countNums(teamData, "Cubes Moved w/ Teleop", {
-        4: "Num of Own Cubes on Switch",
-        5: "Num of Own Cubes on Scale",
-        6: "Num of Opponent Cubes on Switch"
+      countNums(teamNumber, teamData, "Cubes Moved w/ Teleop", {
+        4: "Own Cubes on Switch",
+        5: "Own Cubes on Scale",
+        6: "Opponent Cubes on Switch"
       })
     );
     out.push(
-      countNums(teamData, "Exchanged Cubes", {
-        7: "Num of Cubes Exchanged"
+      countNums(teamNumber, teamData, "Exchanged Cubes", {
+        7: "Cubes Exchanged"
       })
     );
     out.push(
-      countNums(teamData, "Num of Bots Climbed", {
-        8: "Own Bot Climbed",
-        9: "Own Bot Climbed w/ 1 Teammate",
-        10: "Own Bot Climbed w/ 2 Teammates"
+      countNums(teamNumber, teamData, "Num of Bots Climbed", {
+        8:  "Own Bot",
+        9:  "Own Bot w/ 1 Teammate",
+        10: "Own Bot w/ 2 Teammates"
       })
     );
 
-    out.push(countEnum(teamData, "Did They Defend?", 11, yesNo));
+    out.push(countEnum(teamNumber, teamData, "Did They Defend?", 11, yesNo));
   } else if (dataset == datasets[4]) {
     // 2020
 
     //column 1
     out.push(
-      countEnum(teamData, "Starting Location", 0, {
+      countEnum(teamNumber, teamData, "Starting Location", 0, {
         "Inline with Opposing Trench": "Opp. Trench",
         "Right of Goal": "Right Goal",
         "Left of Goal": "Left Goal"
@@ -434,7 +486,7 @@ function buildChartData(teamData) {
 
     //column 2-9
     out.push(
-      countNums(teamData, "Auto Balls", {
+      countNums(teamNumber, teamData, "Auto Balls", {
         1: "Low",
         2: "1",
         3: "2/3",
@@ -448,7 +500,7 @@ function buildChartData(teamData) {
 
     //column 10-15
     out.push(
-      countNums(teamData, "Tele Balls", {
+      countNums(teamNumber, teamData, "Tele Balls", {
         9: "Low",
         10: "1",
         11: "2/3",
@@ -459,15 +511,15 @@ function buildChartData(teamData) {
     );
 
     //column 16
-    out.push(countEnum(teamData, "Wheel Spin", 15, yesNo));
+    out.push(countEnum(teamNumber, teamData, "Wheel Spin", 15, yesNo));
 
     //column 17
-    out.push(countEnum(teamData, "Wheel Color Match", 16, yesNo));
+    out.push(countEnum(teamNumber, teamData, "Wheel Color Match", 16, yesNo));
 
     //column 18
     out.push(
-      countEnum(teamData, "Defender", 17, {
-        None: "None",
+      countEnum(teamNumber, teamData, "Defender", 17, {
+        None:  "None",
         Light: "Light",
         Heavy: "Heavy"
       })
@@ -475,8 +527,8 @@ function buildChartData(teamData) {
 
     //column 19
     out.push(
-      countEnum(teamData, "Target", 18, {
-        None: "None",
+      countEnum(teamNumber, teamData, "Target", 18, {
+        None:  "None",
         Light: "Light",
         Heavy: "Heavy"
       })
@@ -489,7 +541,7 @@ function buildChartData(teamData) {
  * Counts data that is specified as an enum.
  * Example: Starting Position can be L1, L2, M, R1, or R2
  */
-function countEnum(teamData, title, field, map) {
+function countEnum(teamNumber, teamData, title, field, map) {
   let keys = Object.keys(map);
   let out = new Array(keys.length).fill(0);
   teamData
@@ -502,15 +554,30 @@ function countEnum(teamData, title, field, map) {
         }
       }
     });
-  return new ChartData(title, Object.values(map), out);
+  return new ChartData(title, teamNumber, Object.values(map), out);
 }
 
 /**
  * Counts several columns of related numerical data.
  * Example: Number of Stacks 1, Number of Stacks 2, etc
  */
-function countNums(teamData, title, map) {
-  console.log(teamData);
+function countNums(teamNumber, teamData, title, map) {
   let out = Object.keys(map).map(k => teamData.flatMap(m => m[k]).reduce(sum));
-  return new ChartData(title, Object.values(map), out);
+  return new ChartData(title, teamNumber, Object.values(map), out);
 }
+
+scrawl.makeAnimation({
+    name: 'pathing',
+    fn: function() {
+        return new Promise((resolve, reject) => {
+            scrawl.render()
+            .then(() => {
+                resolve(true);
+            })
+            .catch(err => {
+                console.log(err);
+                reject(false);
+            });
+        });
+    }
+});
