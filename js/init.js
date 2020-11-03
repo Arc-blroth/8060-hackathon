@@ -270,6 +270,121 @@ const yesNo = {
 function buildChartData(teamNumber, teamData) {
   let out = [];
   if (dataset == datasets[0]) {
+    // 2015
+    out.push(
+      countNums(teamNumber, teamData, "Autozone Totes", {
+        0: "Number of totes moved into Autozone during autonomous"
+      })
+    );
+    out.push(countEnum(teamNumber, teamData, "Moved Into Auto Zone", 1, yesNo));
+    out.push(
+      countNums(teamNumber, teamData, "Bins Retrieved from Step", {
+        2: "Bins"
+      })
+    );
+    out.push(
+      countNums(teamNumber, teamData, "Stacks", {
+        3: "Number of Stacks"
+      })
+    );
+    out.push(
+      countNums(teamNumber, teamData, "Binned Stacks", {
+        4: "Number of Binned Stacks"
+      })
+    );
+    out.push(
+      countNums(teamNumber, teamData, "Noodled Stacks", {
+        5: "Number of Noodled Stacks"
+      })
+    );
+    out.push(
+      countNums(teamNumber, teamData, "Coopertition Totes Placed", {
+        6: "Totes"
+      })
+    );
+    out.push(countEnum(teamNumber, teamData, "Intake Human", 7, yesNo));
+    out.push(countEnum(teamNumber, teamData, "Intake Landfill", 8, yesNo));
+    out.push(
+      countNums(teamNumber, teamData, "Number of Capped Stacks", {
+        9:  "1",
+        10: "2",
+        11: "3",
+        12: "4",
+        13: "5",
+        14: "6"
+      })
+    );
+    out.push(
+      countNums(teamNumber, teamData, "Number of Stacks", {
+        15: "1",
+        16: "2",
+        17: "3",
+        18: "4",
+        19: "5",
+        20: "6"
+      })
+    );
+  } else if (dataset == datasets[1]) {
+    // 2018cc
+    out.push(countEnum(teamNumber, teamData, "Crossed Line Autonomously?", 1, yesNo));
+    out.push(
+      countNums(teamNumber, teamData, "Cubes Moved Autonomously", {
+        2: "Own Cubes on Switch",
+        3: "Own Cubes on Scale"
+      })
+    );
+    out.push(
+      countNums(teamNumber, teamData, "Cubes Moved w/ Teleop", {
+        4: "Own Cubes on Switch",
+        5: "Own Cubes on Scale",
+        6: "Opponent Cubes on Switch"
+      })
+    );
+    out.push(
+      countNums(teamNumber, teamData, "Cubes Exchanged", {
+        7: "Cubes Exchanged"
+      })
+    );
+    out.push(
+      countNums(teamNumber, teamData, "Num of Bots Climbed", {
+        8:  "Own Bot",
+        9:  "Own Bot w/ 1 Teammate",
+        10: "Own Bot w/ 2 Teammates"
+      })
+    );
+    out.push(new PathingData("test pathing", []));
+    out.push(countEnum(teamNumber, teamData, "Did They Defend?", 11, yesNo));
+  } else if (dataset == datasets[2]) {
+    // 2018roe
+    out.push(countEnum(teamNumber, teamData, "Crossed Line Autonomously?", 1, yesNo));
+    out.push(
+      countNums(teamNumber, teamData, "Cubes Moved Autonomously", {
+        2: "Own Cubes on Switch",
+        3: "Own Cubes on Scale"
+      })
+    );
+    out.push(
+      countNums(teamNumber, teamData, "Cubes Moved w/ Teleop", {
+        4: "Own Cubes on Switch",
+        5: "Own Cubes on Scale",
+        6: "Opponent Cubes on Switch"
+      })
+    );
+    out.push(
+      countNums(teamNumber, teamData, "Exchanged Cubes", {
+        7: "Cubes Exchanged"
+      })
+    );
+    out.push(
+      countNums(teamNumber, teamData, "Num of Bots Climbed", {
+        8:  "Own Bot",
+        9:  "Own Bot w/ 1 Teammate",
+        10: "Own Bot w/ 2 Teammates"
+      })
+    );
+
+    out.push(countEnum(teamNumber, teamData, "Did They Defend?", 11, yesNo));
+  } else if (dataset == datasets[3]) {
     // 2019
     out.push(
       countEnum(teamNumber, teamData, "Starting Position", 0, {
@@ -358,121 +473,6 @@ function buildChartData(teamNumber, teamData) {
     );
     out.push(countEnum(teamNumber, teamData, "Did they have any Fouls?", 24, yesNo));
     out.push(countEnum(teamNumber, teamData, "Was the team assisted?", 28, yesNo));
-  } else if (dataset == datasets[1]) {
-    // 2015
-    out.push(
-      countNums(teamNumber, teamData, "Autozone Totes", 0, {
-        0: "Number of totes moved into Autozone during autonomous"
-      })
-    );
-    out.push(countEnum(teamNumber, teamData, "Moved Into Auto Zone", 1, yesNo));
-    out.push(
-      countNums(teamNumber, teamData, "Bins Retrieved from Step", 2, {
-        2: "Bins"
-      })
-    );
-    out.push(
-      countNums(teamNumber, teamData, "Stacks", {
-        3: "Number of Stacks"
-      })
-    );
-    out.push(
-      countNums(teamNumber, teamData, "Binned Stacks", {
-        4: "Number of Binned Stacks"
-      })
-    );
-    out.push(
-      countNums(teamNumber, teamData, "Noodled Stacks", {
-        5: "Number of Noodled Stacks"
-      })
-    );
-    out.push(
-      countNums(teamNumber, teamData, "Coopertition Totes Placed", {
-        6: "Totes"
-      })
-    );
-    out.push(countEnum(teamNumber, teamData, "Intake Human", 7, yesNo));
-    out.push(countEnum(teamNumber, teamData, "Intake Landfill", 8, yesNo));
-    out.push(
-      countNums(teamNumber, teamData, "Number of Capped Stacks", {
-        9:  "1",
-        10: "2",
-        11: "3",
-        12: "4",
-        13: "5",
-        14: "6"
-      })
-    );
-    out.push(
-      countNums(teamNumber, teamData, "Number of Stacks", {
-        15: "1",
-        16: "2",
-        17: "3",
-        18: "4",
-        19: "5",
-        20: "6"
-      })
-    );
-  } else if (dataset == datasets[2]) {
-    // 2018cc
-    out.push(countEnum(teamNumber, teamData, "Crossed Line Autonomously?", 1, yesNo));
-    out.push(
-      countNums(teamNumber, teamData, "Cubes Moved Autonomously", {
-        2: "Own Cubes on Switch",
-        3: "Own Cubes on Scale"
-      })
-    );
-    out.push(
-      countNums(teamNumber, teamData, "Cubes Moved w/ Teleop", {
-        4: "Own Cubes on Switch",
-        5: "Own Cubes on Scale",
-        6: "Opponent Cubes on Switch"
-      })
-    );
-    out.push(
-      countNums(teamNumber, teamData, "Cubes Exchanged", {
-        7: "Cubes Exchanged"
-      })
-    );
-    out.push(
-      countNums(teamNumber, teamData, "Num of Bots Climbed", {
-        8:  "Own Bot",
-        9:  "Own Bot w/ 1 Teammate",
-        10: "Own Bot w/ 2 Teammates"
-      })
-    );
-    out.push(new PathingData("test pathing", []));
-    out.push(countEnum(teamNumber, teamData, "Did They Defend?", 11, yesNo));
-  } else if (dataset == datasets[3]) {
-    // 2018roe
-    out.push(countEnum(teamNumber, teamData, "Crossed Line Autonomously?", 1, yesNo));
-    out.push(
-      countNums(teamNumber, teamData, "Cubes Moved Autonomously", {
-        2: "Own Cubes on Switch",
-        3: "Own Cubes on Scale"
-      })
-    );
-    out.push(
-      countNums(teamNumber, teamData, "Cubes Moved w/ Teleop", {
-        4: "Own Cubes on Switch",
-        5: "Own Cubes on Scale",
-        6: "Opponent Cubes on Switch"
-      })
-    );
-    out.push(
-      countNums(teamNumber, teamData, "Exchanged Cubes", {
-        7: "Cubes Exchanged"
-      })
-    );
-    out.push(
-      countNums(teamNumber, teamData, "Num of Bots Climbed", {
-        8:  "Own Bot",
-        9:  "Own Bot w/ 1 Teammate",
-        10: "Own Bot w/ 2 Teammates"
-      })
-    );
-
-    out.push(countEnum(teamNumber, teamData, "Did They Defend?", 11, yesNo));
   } else if (dataset == datasets[4]) {
     // 2020
 
