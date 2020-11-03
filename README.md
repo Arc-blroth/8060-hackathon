@@ -53,9 +53,8 @@ At this point, the user can select one or more teams. On selection, the code run
 The main part of the logic for this is handled in [updateGraphs()](https://github.com/Arc-blroth/8060-hackathon/blob/glitch/js/init.js#L171) using functional programming. First, the code maps every team to their raw data. Then, the code maps the raw data into a human-readable format inside [buildChartData()](https://github.com/Arc-blroth/8060-hackathon/blob/glitch/js/init.js#L270), the largest function in the codebase.
 In our initial research, we found that there were two main types of data:
 
--"Enumeration" data, which consisted of a set of possible textual values
-
-- Example: [Starting Location](https://github.com/Arc-blroth/8060-hackathon/blob/glitch/js/init.js#L389), which can be either “L1”, “L2”, “M”, “M1,” or “M2”
+- "Enumeration" data, which consisted of a set of possible textual values
+  - Example: [Starting Location](https://github.com/Arc-blroth/8060-hackathon/blob/glitch/js/init.js#L389), which can be either “L1”, “L2”, “M”, “M1,” or “M2”
 
 - Numerical data spread across one or more columns
   - Example: [Number of Stacks](https://github.com/Arc-blroth/8060-hackathon/blob/glitch/js/init.js#L317), which is spread out into 6 different columns
